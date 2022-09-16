@@ -18,6 +18,9 @@ provider "aws" {
     region = "us-east-1"
 }
 
+##########################################################
+# Create dynamodb_table for terraform state 
+##########################################################
 resource "aws_dynamodb_table" "terraform_state_lock" {
   name           = var.dynamodb_table
   hash_key       = "LockID"
@@ -34,7 +37,9 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 
 }
-
+##################################################
+# Create s3 bucket
+##################################################
 resource "aws_s3_bucket" "terraform_state" {
   bucket = var.state_backet
 

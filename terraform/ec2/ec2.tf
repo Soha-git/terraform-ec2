@@ -1,5 +1,6 @@
-
-
+######################################
+# Data search ami amazon-linux
+#####################################
 data "aws_ami" "amazon-linux" {
   most_recent = true
   owners = ["amazon"]
@@ -24,6 +25,9 @@ data "aws_ami" "amazon-linux" {
 
 }
 
+############################################
+# Genetate openssh key
+############################################
 resource "tls_private_key" "aws" {
   algorithm = "RSA"
 }
@@ -38,6 +42,9 @@ resource "local_file" "local" {
 
 }
 
+########################################################
+# Create security_group to EC2
+########################################################
 resource "aws_security_group" "nginx" {
   name        = "Web-site"
   description = " This is security gropu for ec2"
@@ -67,6 +74,9 @@ resource "aws_security_group" "nginx" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+########################################################
+# Create EC2 instance 
+########################################################
 resource "aws_instance" "web-site" {
   ami                    = data.aws_ami.amazon-linux.id
   instance_type          = "t2.micro"
