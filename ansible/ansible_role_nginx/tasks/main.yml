@@ -1,0 +1,36 @@
+---
+- name: nginx | Block
+  block:
+    - name: nginx | Update yum package
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+
+    - name: nginx | install nginx
+      ansible.builtin.command: amazon-linux-extras install nginx1 > /opt/info_install_nginx.txt
+      args:
+        creates: /opt/info_install_nginx.txt
+
+    - name: nginx | configuration nginx.conf
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '^types_hash_max_size 4096;'
+        insertafter: 'types_hash_max_size 4096;'
+        line: 'server_names_hash_bucket_size 128;'
+
+    - name: nginx | create folder /opt/www/html
+      ansible.builtin.file:
+        path: /opt/www/html
+        state: directory
+        owner: nginx
+        group: nginx
+
+    - name: nginx | Nginx config ec2.conf
+      ansible.builtin.template:
+        src: ec2.conf.j2
+        dest: /etc/nginx/conf.d/ec2.conf
+        owner: nginx
+        group: nginx
+        mode: '0640'
+      notify: Restart server
+  become: true

@@ -1,0 +1,4 @@
+- name: Configurative EC2
+  hosts: all
+  roles: 
+    - ansible_role_nginx
